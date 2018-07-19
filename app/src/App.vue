@@ -1,6 +1,20 @@
 <template>
-	<sign-up @sign-in="changeState = !changeState" v-if="changeState"></sign-up>
-	<sign-in @sign-up="changeState = !changeState" v-else></sign-in>
+	<v-app>
+		<v-container fluid fill-height>
+    		<v-layout align-center justify-center>
+        		<v-flex xs12 sm8 md4>		
+					<v-toolbar color="indigo" dark>
+						<v-toolbar-title>{{ isSignUpForm ? 'Регистрация' : 'Авторизация' }}</v-toolbar-title>
+						<v-spacer></v-spacer>
+					</v-toolbar>
+		
+					<sign-up @sign-in="isSignUpForm = !isSignUpForm" v-if="isSignUpForm"></sign-up>
+					
+					<sign-in @sign-up="isSignUpForm = !isSignUpForm" v-if="!isSignUpForm"></sign-in>
+        		</v-flex>
+    		</v-layout>
+		</v-container>
+	</v-app>
 </template>
 
 <script>
@@ -11,7 +25,7 @@ export default {
 	name: "app",
 	data: function() {
 		return {
-			changeState: false
+			isSignUpForm: false
 		};
 	},
 	components: {
@@ -20,11 +34,3 @@ export default {
 	}
 };
 </script>
-
-<style>
-html,
-body {
-	font-family: "Roboto";
-	height: 100%;
-}
-</style>
