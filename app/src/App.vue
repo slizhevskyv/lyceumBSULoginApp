@@ -1,18 +1,14 @@
 <template>
 	<v-app>
 		<v-container fluid fill-height>
-    		<v-layout align-center justify-center>
-        		<v-flex xs12 sm8 md4>		
-					<v-toolbar color="indigo" dark>
-						<v-toolbar-title>{{ isSignUpForm ? 'Регистрация' : 'Авторизация' }}</v-toolbar-title>
-						<v-spacer></v-spacer>
-					</v-toolbar>
-		
-					<sign-up @sign-in="isSignUpForm = !isSignUpForm" v-if="isSignUpForm"></sign-up>
-					
-					<sign-in @sign-up="isSignUpForm = !isSignUpForm" v-if="!isSignUpForm"></sign-in>
-        		</v-flex>
-    		</v-layout>
+			<v-layout align-center justify-center>
+				<v-flex xs12 sm8 md4>
+					<transition name="fade" mode="out-in">
+						<sign-up @sign-in="isSignUpForm = !isSignUpForm" v-if="isSignUpForm"></sign-up>
+						<sign-in @sign-up="isSignUpForm = !isSignUpForm" v-else></sign-in>
+					</transition>
+				</v-flex>
+			</v-layout>
 		</v-container>
 	</v-app>
 </template>
@@ -34,3 +30,16 @@ export default {
 	}
 };
 </script>
+
+<style>
+	.fade-enter-active, .fade-leave-active{
+		transition: opacity .3s ease-out;
+	}
+	.fade-enter, .fade-leave-to{
+		opacity: 0;
+	}
+	.fade-enter-to, .fade-leave{
+		opacity: 1;
+	}
+
+</style>

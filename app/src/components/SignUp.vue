@@ -1,48 +1,44 @@
 <template>
-   <v-fade-transition>
-
-        <v-card>
-            <v-card-text>
-                <v-form>
-                    <v-text-field prepend-icon="person"
-                                name="login" 
-                                label="Логин (e-mail)" 
-                                v-model="email" 
-                                :rules="[rules.required, rules.email]"
-                                autofocus></v-text-field>
-                    
-                    <v-text-field prepend-icon="lock" 
-                                :class="validateStatusPassword == false ? 'error' : ''" 
-                                @input="validatePassword" 
-                                name="password" 
-                                label="Пароль" 
-                                id="password" 
-                                type="password" 
-                                v-model="password"></v-text-field>
-                    <v-text-field prepend-icon="lock" 
-                                :class="validateStatusPassword == false ? 'error' : ''" 
-                                @input="validatePassword" 
-                                name="password" 
-                                label="Подтвердите пароль" 
-                                id="confirm-password" 
-                                type="password" 
-                                v-model="confirmPassword"></v-text-field>
-                </v-form>
-            </v-card-text>
-            <v-card-actions>
-                <v-btn flat color="primary"
-                       @click.stop="$emit('sign-in')">
-                       Уже есть аккаунт?
-                </v-btn>
-                <v-spacer></v-spacer>
-                <v-btn color="success"
-                    :disabled="passwordInvalid || emailInvalid">
-                    Зарегистрироваться
-                </v-btn>
-            </v-card-actions>
-            <v-card-actions></v-card-actions>
-        </v-card>
-   </v-fade-transition>
+    <v-card>
+        <v-toolbar color="indigo" dark>
+            <v-toolbar-title>Регистрация</v-toolbar-title>
+            <v-spacer></v-spacer>
+        </v-toolbar>
+        <v-card-text>
+            <v-form>
+                <v-text-field prepend-icon="person"
+                            name="login" 
+                            label="Логин (e-mail)" 
+                            v-model="email" 
+                            :rules="[rules.required, rules.email]">
+                            </v-text-field>
+                <v-text-field prepend-icon="lock"
+                            name="password" 
+                            label="Пароль"
+                            type="password" 
+                            v-model="password"
+                            :rules="[rules.required, rules.validatePassword]"></v-text-field>
+                <v-text-field prepend-icon="lock"
+                            name="password"
+                            label="Подтвердите пароль"
+                            type="password" 
+                            v-model="confirmPassword"
+                            :rules="[rules.required, rules.validatePassword]"></v-text-field>
+            </v-form>
+        </v-card-text>
+        <v-card-actions>
+            <v-btn flat color="primary"
+                    @click.stop="$emit('sign-in')">
+                    Уже есть аккаунт?
+            </v-btn>
+            <v-spacer></v-spacer>
+            <v-btn color="success"
+                :disabled="toggleButton">
+                Зарегистрироваться
+            </v-btn>
+        </v-card-actions>
+        <v-card-actions></v-card-actions>
+    </v-card>
 </template>
 
 <script>
@@ -53,24 +49,36 @@ export default {
             password: "",
             confirmPassword: "",
             email: "",
-            validateStatusPassword: undefined,
-            validateStatusEmail: undefined,
-            disableButton: true,
+            isPasswordInvalid: true,
+            isEmailInvalid: true,
             rules: {
-                required: value => !!value || 'Required.',
+                required: value => !!value || 'Заполните поле!',
                 email: value => {
                     const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
                 
-                    this.emailInvalid = !pattern.test(value)
+                    this.isEmailInvalid = !pattern.test(value)
                     
-                    return pattern.test(value) || 'Invalid e-mail.'
+                    return pattern.test(value) || 'Неверно заполнено поле!';
+                },
+                validatePassword: () => {
+                    if(this.password != this.confirmPassword) {
+                        this.isPasswordInvalid = true;
+                        return "Введеные пароли не совпадают";
+                    } else if(this.password == this.confirmPassword) {
+                        this.isPasswordInvalid = false;
+                        return true;
+                    }
                 }
         }
         };
     },
-    methods: {
-        validatePassword: function() {
-            this.passwordInvalid = this.password !== this.confirmPassword
+    computed: {
+        toggleButton: function() {
+            if(this.isEmailInvalid || this.isPasswordInvalid) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 };
