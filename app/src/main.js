@@ -1,12 +1,18 @@
 import '@babel/polyfill'
 import Vue from 'vue'
-import Vuetify from 'vuetify'
+import axios from "axios";
+import "./plugins/vuetify";
 
-import 'vuetify/dist/vuetify.min.css'
-
+//COMPONENTS
 import App from './App.vue'
 
-Vue.use(Vuetify)
+//SERVICES
+import apiService from "./services/apiService";
+
+//DEPENDENCIES
+Vue.use(axios);
+Vue.use(apiService);
+
 Vue.config.productionTip = false
 
 new Vue({
